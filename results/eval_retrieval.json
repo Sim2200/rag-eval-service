@@ -1,0 +1,42 @@
+[
+  {
+    "retriever": "bm25",
+    "questions": 500,
+    "k": 5,
+    "recall_at_1": 0.75,
+    "recall_at_5": 0.91,
+    "mrr": 0.8112,
+    "latency_ms": {
+      "p50": 4.8,
+      "p95": 7.8
+    }
+  },
+  {
+    "retriever": "dense_local",
+    "questions": 500,
+    "k": 5,
+    "recall_at_1": 0.624,
+    "recall_at_5": 0.886,
+    "mrr": 0.7278,
+    "latency_ms": {
+      "p50": 120.9,
+      "p95": 201.9,
+      "embed_p50": 120.5,
+      "vector_search_p50": 0.4
+    }
+  },
+  {
+    "retriever": "hybrid",
+    "questions": 500,
+    "k": 5,
+    "recall_at_1": 0.758,
+    "recall_at_5": 0.946,
+    "mrr": 0.8364,
+    "latency_ms": {
+      "p50": 121.4,
+      "p95": 206.4,
+      "embed_p50": 113.8,
+      "vector_search_p50": 0.4
+    }
+  }
+]

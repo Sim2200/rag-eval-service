@@ -1,0 +1,852 @@
+{
+  "config": {
+    "embed_model": "text-embedding-005",
+    "gen_model": "gemini-2.5-flash",
+    "k": 5,
+    "paragraphs": 2067,
+    "n_retrieval": 500,
+    "n_generation": 200
+  },
+  "retrieval": [
+    {
+      "retriever": "bm25",
+      "questions": 500,
+      "k": 5,
+      "recall_at_1": 0.75,
+      "recall_at_5": 0.91,
+      "mrr": 0.8112,
+      "latency_ms": {
+        "p50": 4.8,
+        "p95": 7.8
+      }
+    },
+    {
+      "retriever": "dense",
+      "questions": 500,
+      "k": 5,
+      "recall_at_1": 0.624,
+      "recall_at_5": 0.886,
+      "mrr": 0.728,
+      "latency_ms": {
+        "p50": 876.6,
+        "note": "measured in the first full run (results copied from its log after the generation stage of that run failed); BigQuery VECTOR_SEARCH query-job latency dominates"
+      }
+    },
+    {
+      "retriever": "dense_local",
+      "questions": 500,
+      "k": 5,
+      "recall_at_1": 0.624,
+      "recall_at_5": 0.886,
+      "mrr": 0.7278,
+      "latency_ms": {
+        "p50": 120.9,
+        "p95": 201.9,
+        "embed_p50": 120.5,
+        "vector_search_p50": 0.4
+      }
+    },
+    {
+      "retriever": "hybrid",
+      "questions": 500,
+      "k": 5,
+      "recall_at_1": 0.758,
+      "recall_at_5": 0.946,
+      "mrr": 0.8364,
+      "latency_ms": {
+        "p50": 121.4,
+        "p95": 206.4,
+        "embed_p50": 113.8,
+        "vector_search_p50": 0.4
+      }
+    }
+  ],
+  "generation": [
+    {
+      "arm": "hybrid",
+      "questions": 200,
+      "k": 5,
+      "exact_match": 0.78,
+      "f1": 0.8582,
+      "unknown_rate": 0.055,
+      "gold_paragraph_retrieved": 0.95,
+      "f1_when_gold_retrieved": 0.8968,
+      "f1_when_gold_missed": 0.125,
+      "judged_supported_rate": 0.9894,
+      "judged": 189,
+      "tokens_per_query": {
+        "prompt": 941.2,
+        "output": 4.8
+      },
+      "gen_latency_ms": {
+        "p50": 370.3,
+        "p95": 524.0
+      },
+      "cost_usd_per_1k_queries": 0.2943,
+      "wall_seconds": 122.0,
+      "examples": [
+        {
+          "id": "5725e28f38643c19005ace26",
+          "pred": "to orbit the Moon",
+          "golds": [
+            "orbit the Moon",
+            "to orbit the Moon"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 932,
+          "output_tokens": 4,
+          "gen_ms": 1295.2,
+          "supported": true,
+          "judge_tokens": 961
+        },
+        {
+          "id": "56f8c43d9b226e1400dd0f63",
+          "pred": "harsher",
+          "golds": [
+            "harsher"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 771,
+          "output_tokens": 3,
+          "gen_ms": 1347.5,
+          "supported": true,
+          "judge_tokens": 794
+        },
+        {
+          "id": "572976183f37b31900478432",
+          "pred": "high atmospheric CO2 concentrations",
+          "golds": [
+            "Under conditions such as high atmospheric CO2 concentrations",
+            "high atmospheric CO2 concentrations",
+            "Under conditions such as high atmospheric CO2 concentrations,"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 913,
+          "output_tokens": 5,
+          "gen_ms": 391.4,
+          "supported": true,
+          "judge_tokens": 947
+        },
+        {
+          "id": "56f8bbb09e9bad19000a03dd",
+          "pred": "a \"hysterical and demonizing mentality",
+          "golds": [
+            "hysterical and demonizing mentality",
+            "a \"hysterical and demonizing mentality\" about Jews"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 1169,
+          "output_tokens": 9,
+          "gen_ms": 416.8,
+          "supported": true,
+          "judge_tokens": 1204
+        },
+        {
+          "id": "572961f61d0469140077935a",
+          "pred": "additional membranes",
+          "golds": [
+            "additional membranes outside of the original two",
+            "additional membranes",
+            "have additional membranes outside of the original two"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 715,
+          "output_tokens": 2,
+          "gen_ms": 423.3,
+          "supported": true,
+          "judge_tokens": 745
+        },
+        {
+          "id": "5725bb34271a42140099d0c8",
+          "pred": "Soviet Union",
+          "golds": [
+            "Soviet Union"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 801,
+          "output_tokens": 2,
+          "gen_ms": 446.6,
+          "supported": true,
+          "judge_tokens": 820
+        },
+        {
+          "id": "5725e36f89a1e219009ac039",
+          "pred": "July 1969",
+          "golds": [
+            "July 1969",
+            "July",
+            "July 20, 1969"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 790,
+          "output_tokens": 6,
+          "gen_ms": 364.4,
+          "supported": true,
+          "judge_tokens": 821
+        },
+        {
+          "id": "5728848cff5b5019007da29a",
+          "pred": "unknown",
+          "golds": [
+            "rich and well socially standing",
+            "rich and well"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 1164,
+          "output_tokens": 1,
+          "gen_ms": 425.9
+        }
+      ]
+    },
+    {
+      "arm": "dense",
+      "questions": 200,
+      "k": 5,
+      "exact_match": 0.74,
+      "f1": 0.8161,
+      "unknown_rate": 0.075,
+      "gold_paragraph_retrieved": 0.905,
+      "f1_when_gold_retrieved": 0.8838,
+      "f1_when_gold_missed": 0.1711,
+      "judged_supported_rate": 0.9946,
+      "judged": 185,
+      "tokens_per_query": {
+        "prompt": 935.3,
+        "output": 5.1
+      },
+      "gen_latency_ms": {
+        "p50": 382.8,
+        "p95": 565.1
+      },
+      "cost_usd_per_1k_queries": 0.2934,
+      "wall_seconds": 175.9,
+      "examples": [
+        {
+          "id": "5725e28f38643c19005ace26",
+          "pred": "to orbit the Moon",
+          "golds": [
+            "orbit the Moon",
+            "to orbit the Moon"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 1007,
+          "output_tokens": 4,
+          "gen_ms": 2029.1,
+          "supported": true,
+          "judge_tokens": 1036
+        },
+        {
+          "id": "56f8c43d9b226e1400dd0f63",
+          "pred": "harsher",
+          "golds": [
+            "harsher"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 602,
+          "output_tokens": 3,
+          "gen_ms": 1953.2,
+          "supported": true,
+          "judge_tokens": 623
+        },
+        {
+          "id": "572976183f37b31900478432",
+          "pred": "high atmospheric CO2 concentrations",
+          "golds": [
+            "Under conditions such as high atmospheric CO2 concentrations",
+            "high atmospheric CO2 concentrations",
+            "Under conditions such as high atmospheric CO2 concentrations,"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 813,
+          "output_tokens": 5,
+          "gen_ms": 457.9,
+          "supported": true,
+          "judge_tokens": 843
+        },
+        {
+          "id": "56f8bbb09e9bad19000a03dd",
+          "pred": "unknown",
+          "golds": [
+            "hysterical and demonizing mentality",
+            "a \"hysterical and demonizing mentality\" about Jews"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 860,
+          "output_tokens": 1,
+          "gen_ms": 396.1
+        },
+        {
+          "id": "572961f61d0469140077935a",
+          "pred": "additional membranes",
+          "golds": [
+            "additional membranes outside of the original two",
+            "additional membranes",
+            "have additional membranes outside of the original two"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 802,
+          "output_tokens": 2,
+          "gen_ms": 517.4,
+          "supported": true,
+          "judge_tokens": 821
+        },
+        {
+          "id": "5725bb34271a42140099d0c8",
+          "pred": "the Soviet Union",
+          "golds": [
+            "Soviet Union"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 860,
+          "output_tokens": 3,
+          "gen_ms": 422.7,
+          "supported": true,
+          "judge_tokens": 880
+        },
+        {
+          "id": "5725e36f89a1e219009ac039",
+          "pred": "July 1969",
+          "golds": [
+            "July 1969",
+            "July",
+            "July 20, 1969"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 861,
+          "output_tokens": 6,
+          "gen_ms": 342.8,
+          "supported": true,
+          "judge_tokens": 887
+        },
+        {
+          "id": "5728848cff5b5019007da29a",
+          "pred": "rich and well socially standing Chinese",
+          "golds": [
+            "rich and well socially standing",
+            "rich and well"
+          ],
+          "em": 0.0,
+          "f1": 0.9090909090909091,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 1094,
+          "output_tokens": 6,
+          "gen_ms": 392.2,
+          "supported": true,
+          "judge_tokens": 1120
+        }
+      ]
+    },
+    {
+      "arm": "bm25",
+      "questions": 200,
+      "k": 5,
+      "exact_match": 0.775,
+      "f1": 0.8503,
+      "unknown_rate": 0.075,
+      "gold_paragraph_retrieved": 0.93,
+      "f1_when_gold_retrieved": 0.9022,
+      "f1_when_gold_missed": 0.1607,
+      "judged_supported_rate": 0.9946,
+      "judged": 185,
+      "tokens_per_query": {
+        "prompt": 941.6,
+        "output": 4.9
+      },
+      "gen_latency_ms": {
+        "p50": 373.1,
+        "p95": 549.6
+      },
+      "cost_usd_per_1k_queries": 0.2948,
+      "wall_seconds": 92.0,
+      "examples": [
+        {
+          "id": "5725e28f38643c19005ace26",
+          "pred": "to orbit the Moon",
+          "golds": [
+            "orbit the Moon",
+            "to orbit the Moon"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 975,
+          "output_tokens": 4,
+          "gen_ms": 2201.0,
+          "supported": true,
+          "judge_tokens": 1004
+        },
+        {
+          "id": "56f8c43d9b226e1400dd0f63",
+          "pred": "unknown",
+          "golds": [
+            "harsher"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 1029,
+          "output_tokens": 1,
+          "gen_ms": 2097.4
+        },
+        {
+          "id": "572976183f37b31900478432",
+          "pred": "Under conditions such as high atmospheric CO2 concentrations",
+          "golds": [
+            "Under conditions such as high atmospheric CO2 concentrations",
+            "high atmospheric CO2 concentrations",
+            "Under conditions such as high atmospheric CO2 concentrations,"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 952,
+          "output_tokens": 9,
+          "gen_ms": 623.8,
+          "supported": true,
+          "judge_tokens": 982
+        },
+        {
+          "id": "56f8bbb09e9bad19000a03dd",
+          "pred": "a \"hysterical and demonizing mentality",
+          "golds": [
+            "hysterical and demonizing mentality",
+            "a \"hysterical and demonizing mentality\" about Jews"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 1151,
+          "output_tokens": 9,
+          "gen_ms": 418.8,
+          "supported": true,
+          "judge_tokens": 1192
+        },
+        {
+          "id": "572961f61d0469140077935a",
+          "pred": "additional membranes",
+          "golds": [
+            "additional membranes outside of the original two",
+            "additional membranes",
+            "have additional membranes outside of the original two"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 705,
+          "output_tokens": 2,
+          "gen_ms": 732.8,
+          "supported": true,
+          "judge_tokens": 736
+        },
+        {
+          "id": "5725bb34271a42140099d0c8",
+          "pred": "the Soviet Union",
+          "golds": [
+            "Soviet Union"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 793,
+          "output_tokens": 3,
+          "gen_ms": 352.9,
+          "supported": true,
+          "judge_tokens": 821
+        },
+        {
+          "id": "5725e36f89a1e219009ac039",
+          "pred": "unknown",
+          "golds": [
+            "July 1969",
+            "July",
+            "July 20, 1969"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 883,
+          "output_tokens": 1,
+          "gen_ms": 401.1
+        },
+        {
+          "id": "5728848cff5b5019007da29a",
+          "pred": "administrators",
+          "golds": [
+            "rich and well socially standing",
+            "rich and well"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": false,
+          "retrieved_gold": false,
+          "prompt_tokens": 1371,
+          "output_tokens": 2,
+          "gen_ms": 468.7,
+          "supported": true,
+          "judge_tokens": 1401
+        }
+      ]
+    },
+    {
+      "arm": "oracle",
+      "questions": 200,
+      "k": 0,
+      "exact_match": 0.81,
+      "f1": 0.9024,
+      "unknown_rate": 0.04,
+      "gold_paragraph_retrieved": 1.0,
+      "f1_when_gold_retrieved": 0.9024,
+      "f1_when_gold_missed": 0.0,
+      "judged_supported_rate": 0.9792,
+      "judged": 192,
+      "tokens_per_query": {
+        "prompt": 232.2,
+        "output": 4.9
+      },
+      "gen_latency_ms": {
+        "p50": 362.1,
+        "p95": 571.7
+      },
+      "cost_usd_per_1k_queries": 0.0819,
+      "wall_seconds": 89.6,
+      "examples": [
+        {
+          "id": "5725e28f38643c19005ace26",
+          "pred": "sending Apollo 8 to orbit the Moon instead",
+          "golds": [
+            "orbit the Moon",
+            "to orbit the Moon"
+          ],
+          "em": 0.0,
+          "f1": 0.6,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 314,
+          "output_tokens": 9,
+          "gen_ms": 2115.4,
+          "supported": true,
+          "judge_tokens": 361
+        },
+        {
+          "id": "56f8c43d9b226e1400dd0f63",
+          "pred": "harsher",
+          "golds": [
+            "harsher"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 156,
+          "output_tokens": 3,
+          "gen_ms": 1983.8,
+          "supported": true,
+          "judge_tokens": 178
+        },
+        {
+          "id": "572976183f37b31900478432",
+          "pred": "high atmospheric CO2 concentrations",
+          "golds": [
+            "Under conditions such as high atmospheric CO2 concentrations",
+            "high atmospheric CO2 concentrations",
+            "Under conditions such as high atmospheric CO2 concentrations,"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 227,
+          "output_tokens": 5,
+          "gen_ms": 485.5,
+          "supported": true,
+          "judge_tokens": 253
+        },
+        {
+          "id": "56f8bbb09e9bad19000a03dd",
+          "pred": "a \"hysterical and demonizing mentality",
+          "golds": [
+            "hysterical and demonizing mentality",
+            "a \"hysterical and demonizing mentality\" about Jews"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 260,
+          "output_tokens": 9,
+          "gen_ms": 370.5,
+          "supported": true,
+          "judge_tokens": 295
+        },
+        {
+          "id": "572961f61d0469140077935a",
+          "pred": "additional membranes",
+          "golds": [
+            "additional membranes outside of the original two",
+            "additional membranes",
+            "have additional membranes outside of the original two"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 200,
+          "output_tokens": 2,
+          "gen_ms": 405.5,
+          "supported": true,
+          "judge_tokens": 219
+        },
+        {
+          "id": "5725bb34271a42140099d0c8",
+          "pred": "the Soviet Union",
+          "golds": [
+            "Soviet Union"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 285,
+          "output_tokens": 3,
+          "gen_ms": 401.4,
+          "supported": true,
+          "judge_tokens": 305
+        },
+        {
+          "id": "5725e36f89a1e219009ac039",
+          "pred": "July 1969",
+          "golds": [
+            "July 1969",
+            "July",
+            "July 20, 1969"
+          ],
+          "em": 1.0,
+          "f1": 1.0,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 223,
+          "output_tokens": 6,
+          "gen_ms": 337.0,
+          "supported": true,
+          "judge_tokens": 248
+        },
+        {
+          "id": "5728848cff5b5019007da29a",
+          "pred": "rich and well socially standing Chinese",
+          "golds": [
+            "rich and well socially standing",
+            "rich and well"
+          ],
+          "em": 0.0,
+          "f1": 0.9090909090909091,
+          "unknown": false,
+          "retrieved_gold": true,
+          "prompt_tokens": 188,
+          "output_tokens": 6,
+          "gen_ms": 365.3,
+          "supported": true,
+          "judge_tokens": 207
+        }
+      ]
+    },
+    {
+      "arm": "closed",
+      "questions": 200,
+      "k": 0,
+      "exact_match": 0.09,
+      "f1": 0.1404,
+      "unknown_rate": 0.72,
+      "gold_paragraph_retrieved": 0.0,
+      "f1_when_gold_retrieved": 0.0,
+      "f1_when_gold_missed": 0.1404,
+      "judged_supported_rate": null,
+      "judged": 0,
+      "tokens_per_query": {
+        "prompt": 66.4,
+        "output": 1.6
+      },
+      "gen_latency_ms": {
+        "p50": 379.9,
+        "p95": 591.6
+      },
+      "cost_usd_per_1k_queries": 0.024,
+      "wall_seconds": 40.9,
+      "examples": [
+        {
+          "id": "5725e28f38643c19005ace26",
+          "pred": "a lunar orbital mission",
+          "golds": [
+            "orbit the Moon",
+            "to orbit the Moon"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": false,
+          "retrieved_gold": false,
+          "prompt_tokens": 73,
+          "output_tokens": 4,
+          "gen_ms": 2039.9
+        },
+        {
+          "id": "56f8c43d9b226e1400dd0f63",
+          "pred": "unknown",
+          "golds": [
+            "harsher"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 67,
+          "output_tokens": 1,
+          "gen_ms": 1883.5
+        },
+        {
+          "id": "572976183f37b31900478432",
+          "pred": "unknown",
+          "golds": [
+            "Under conditions such as high atmospheric CO2 concentrations",
+            "high atmospheric CO2 concentrations",
+            "Under conditions such as high atmospheric CO2 concentrations,"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 62,
+          "output_tokens": 1,
+          "gen_ms": 347.2
+        },
+        {
+          "id": "56f8bbb09e9bad19000a03dd",
+          "pred": "unknown",
+          "golds": [
+            "hysterical and demonizing mentality",
+            "a \"hysterical and demonizing mentality\" about Jews"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 65,
+          "output_tokens": 1,
+          "gen_ms": 362.8
+        },
+        {
+          "id": "572961f61d0469140077935a",
+          "pred": "unknown",
+          "golds": [
+            "additional membranes outside of the original two",
+            "additional membranes",
+            "have additional membranes outside of the original two"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 63,
+          "output_tokens": 1,
+          "gen_ms": 610.1
+        },
+        {
+          "id": "5725bb34271a42140099d0c8",
+          "pred": "unknown",
+          "golds": [
+            "Soviet Union"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 63,
+          "output_tokens": 1,
+          "gen_ms": 269.7
+        },
+        {
+          "id": "5725e36f89a1e219009ac039",
+          "pred": "unknown",
+          "golds": [
+            "July 1969",
+            "July",
+            "July 20, 1969"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 68,
+          "output_tokens": 1,
+          "gen_ms": 392.7
+        },
+        {
+          "id": "5728848cff5b5019007da29a",
+          "pred": "unknown",
+          "golds": [
+            "rich and well socially standing",
+            "rich and well"
+          ],
+          "em": 0.0,
+          "f1": 0.0,
+          "unknown": true,
+          "retrieved_gold": false,
+          "prompt_tokens": 63,
+          "output_tokens": 1,
+          "gen_ms": 408.5
+        }
+      ]
+    }
+  ]
+}

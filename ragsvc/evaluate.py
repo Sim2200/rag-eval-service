@@ -124,17 +124,25 @@ def main() -> None:
     ap.add_argument("--arms", default="hybrid,dense,bm25,oracle,closed")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--no-judge", action="store_true")
+    ap.add_argument("--retrievers", default="bm25,dense,dense_local,hybrid")
+    ap.add_argument("--skip-retrieval", action="store_true", help="reuse results/eval_retrieval.json")
     a = ap.parse_args()
     qs = load_questions(eval_only=True)
     paragraphs = load_paragraphs()
     q_ret, q_gen = qs.head(a.n_retrieval), qs.head(a.n_generation)
     print(f"retrieval on {len(q_ret)} questions, generation on {len(q_gen)}")
+    config.RESULTS_DIR.mkdir(exist_ok=True)
+    ret_path = config.RESULTS_DIR / "eval_retrieval.json"
+    if a.skip_retrieval and ret_path.exists():
+        retrieval = json.loads(ret_path.read_text())
+    else:
+        retrieval = [eval_retrieval(kind, q_ret, a.k, a.project) for kind in a.retrievers.split(",")]
+        ret_path.write_text(json.dumps(retrieval, indent=2))   # saved before generation, which is the slow, flaky part
     out = {"config": {"embed_model": config.EMBED_MODEL, "gen_model": config.GEN_MODEL, "k": a.k,
                       "paragraphs": int(len(paragraphs)), "n_retrieval": len(q_ret), "n_generation": len(q_gen)},
-           "retrieval": [eval_retrieval(kind, q_ret, a.k, a.project) for kind in ("bm25", "dense", "dense_local", "hybrid")],
+           "retrieval": retrieval,
            "generation": [eval_generation(arm, q_gen, paragraphs, a.k, a.project, not a.no_judge, a.workers)
                           for arm in a.arms.split(",")]}
-    config.RESULTS_DIR.mkdir(exist_ok=True)
     (config.RESULTS_DIR / "eval.json").write_text(json.dumps(out, indent=2))
     print("wrote results/eval.json")
 

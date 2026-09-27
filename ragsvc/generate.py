@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 
 from google import genai
@@ -19,7 +20,7 @@ from google.genai import types
 
 from . import config
 
-_CLIENT: genai.Client | None = None
+_LOCAL = threading.local()   # one client per thread: the client is not safe to share across threads
 
 ANSWER_PROMPT = """You answer questions using only the paragraphs below.
 Reply with the shortest exact phrase from the paragraphs that answers the question (a name, number, date or short span).
@@ -40,10 +41,9 @@ Is the proposed answer fully supported by the paragraphs above? Reply with JSON 
 
 
 def client(project: str = config.PROJECT) -> genai.Client:
-    global _CLIENT
-    if _CLIENT is None:
-        _CLIENT = genai.Client(vertexai=True, project=project, location=config.LOCATION)
-    return _CLIENT
+    if getattr(_LOCAL, "client", None) is None:
+        _LOCAL.client = genai.Client(vertexai=True, project=project, location=config.LOCATION)
+    return _LOCAL.client
 
 
 def format_contexts(contexts: list[dict]) -> str:
@@ -52,10 +52,17 @@ def format_contexts(contexts: list[dict]) -> str:
 
 def _generate(prompt: str, max_tokens: int) -> tuple[str, int, int, float]:
     t0 = time.perf_counter()
-    r = client().models.generate_content(
-        model=config.GEN_MODEL, contents=prompt,
-        config=types.GenerateContentConfig(temperature=0.0, max_output_tokens=max_tokens,
-                                           thinking_config=types.ThinkingConfig(thinking_budget=0)))
+    for attempt in range(7):  # 429 (per-minute token quota) and 5xx: back off up to about a minute
+        try:
+            r = client().models.generate_content(
+                model=config.GEN_MODEL, contents=prompt,
+                config=types.GenerateContentConfig(temperature=0.0, max_output_tokens=max_tokens,
+                                                   thinking_config=types.ThinkingConfig(thinking_budget=0)))
+            break
+        except Exception:  # noqa: BLE001
+            if attempt == 6:
+                raise
+            time.sleep(min(60, 2 ** attempt))
     ms = (time.perf_counter() - t0) * 1000
     u = r.usage_metadata
     return (r.text or "").strip(), int(u.prompt_token_count or 0), int(u.candidates_token_count or 0), ms
