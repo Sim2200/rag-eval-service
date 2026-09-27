@@ -7,8 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ragsvc/ ragsvc/
 COPY service/ service/
-COPY data/paragraphs.parquet data/
-COPY data/eval_questions.parquet data/
+COPY data/paragraphs.parquet data/eval_questions.parquet data/
 
 ENV PYTHONPATH=/app
 

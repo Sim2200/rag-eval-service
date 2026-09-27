@@ -66,14 +66,14 @@ class AskResponse(BaseModel):
     usage: UsageMetrics
 
 
-@app.get("/healthz")
-async def healthz():
+@app.get("/health")  # not /healthz: Cloud Run's front end answers that path itself with a 404
+def healthz():
     """Health check endpoint."""
     return {"status": "ok"}
 
 
 @app.post("/ask", response_model=AskResponse)
-async def ask_endpoint(request: AskRequest):
+def ask_endpoint(request: AskRequest):  # sync on purpose: the retrievers and the Gemini client block, so FastAPI runs this in its thread pool
     """Ask a question and retrieve relevant contexts with generated answer."""
     total_start = time.perf_counter()
 

@@ -9,7 +9,11 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import httpx
 import pandas as pd
-from ragsvc.config import RESULTS_DIR
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ragsvc.config import RESULTS_DIR  # noqa: E402
 
 
 def load_test_questions(url: str, num_requests: int = 60):
@@ -32,7 +36,8 @@ def load_test_questions(url: str, num_requests: int = 60):
         latencies = []
         retrieve_times = []
         generate_times = []
-        errors = 0
+        errors = [0]  # a list so the worker closure can count into it
+        t_batch = time.perf_counter()
 
         with ThreadPoolExecutor(max_workers=concurrency) as executor:
             def make_request():
@@ -57,14 +62,15 @@ def load_test_questions(url: str, num_requests: int = 60):
                         retrieve_times.append(data["timings_ms"]["retrieve"])
                         generate_times.append(data["timings_ms"]["generate"])
                     else:
-                        errors += 1
-                except Exception as e:
-                    errors += 1
+                        errors[0] += 1
+                except Exception:  # noqa: BLE001
+                    errors[0] += 1
 
             # Submit all requests
             futures = [executor.submit(make_request) for _ in range(num_requests)]
             for future in futures:
                 future.result()
+        wall_s = time.perf_counter() - t_batch
 
         if latencies:
             latencies.sort()
@@ -73,8 +79,9 @@ def load_test_questions(url: str, num_requests: int = 60):
                 "p50_ms": statistics.median(latencies),
                 "p95_ms": latencies[int(len(latencies) * 0.95)],
                 "max_ms": max(latencies),
-                "throughput_rps": num_requests / (latencies[-1] / 1000),
-                "errors": errors,
+                "throughput_rps": len(latencies) / wall_s,
+                "wall_s": round(wall_s, 1),
+                "errors": errors[0],
                 "mean_retrieve_ms": statistics.mean(retrieve_times) if retrieve_times else 0,
                 "mean_generate_ms": statistics.mean(generate_times) if generate_times else 0,
             }

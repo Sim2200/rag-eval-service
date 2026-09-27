@@ -38,7 +38,9 @@ def pct(xs, p):
 def eval_retrieval(kind: str, qs, k: int, project: str) -> dict:
     r = get_retriever(kind, project)
     hits1, hits5, rr, lat, embed_ms, vs_ms = [], [], [], [], [], []
-    for q in qs.itertuples():
+    for n, q in enumerate(qs.itertuples(), 1):
+        if n % 100 == 0:
+            print(f"    {kind}: {n}/{len(qs)}", flush=True)
         t0 = time.perf_counter()
         res = r.search(q.question, k)
         lat.append((time.perf_counter() - t0) * 1000)

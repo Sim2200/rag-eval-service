@@ -13,8 +13,8 @@ def client():
 
 
 def test_healthz(client):
-    """Test /healthz endpoint."""
-    response = client.get("/healthz")
+    """Test /health endpoint."""
+    response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 

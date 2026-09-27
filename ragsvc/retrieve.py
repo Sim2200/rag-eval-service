@@ -75,8 +75,15 @@ class DenseRetriever:
             FROM VECTOR_SEARCH(TABLE {self.table}, 'embedding', (SELECT @q AS embedding),
                                top_k => @k, distance_type => 'COSINE')
             ORDER BY distance"""
-        rows = self.bq.query(sql, job_config=bigquery.QueryJobConfig(query_parameters=[
-            bigquery.ArrayQueryParameter("q", "FLOAT64", q), bigquery.ScalarQueryParameter("k", "INT64", k)])).result()
+        cfg = bigquery.QueryJobConfig(query_parameters=[bigquery.ArrayQueryParameter("q", "FLOAT64", q),
+                                                        bigquery.ScalarQueryParameter("k", "INT64", k)])
+        for attempt in range(2):  # a query job occasionally never returns; give it 60 s, then retry once
+            try:
+                rows = list(self.bq.query(sql, job_config=cfg).result(timeout=60))
+                break
+            except Exception:  # noqa: BLE001
+                if attempt:
+                    raise
         out = [{"id": int(r.id), "title": r.title, "text": r.text, "score": 1.0 - float(r.distance)} for r in rows]
         self.last_timings = {"embed_ms": round((t1 - t0) * 1000, 1), "vector_search_ms": round((time.perf_counter() - t1) * 1000, 1)}
         return out
