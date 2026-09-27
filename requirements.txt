@@ -1,0 +1,10 @@
+google-genai
+google-cloud-bigquery
+pandas
+pyarrow
+numpy
+rank-bm25
+fastapi
+uvicorn
+httpx
+requests

@@ -1,0 +1,10 @@
+{
+  "table": "project-1adf2361-a5bc-4d4a-a7f.rag.paragraphs",
+  "paragraphs": 2067,
+  "dims": 768,
+  "embed_model": "text-embedding-005",
+  "embed_seconds": 39.5,
+  "paragraphs_per_second": 52.3,
+  "words_embedded": 253780,
+  "bigquery_load_seconds": 4.4
+}
